@@ -9,6 +9,7 @@ public class VirtualKey : BaseModel
     public bool IsRevoked{get; set;} = false;
 
     // relationships
+    public Guid UserId{get; set;}
     public User User{get; set;} = null!;
     public Policy Policy{get; set;} = null!;
     public ICollection<RequestLog> RequestLogs{get; set;} = new List<RequestLog>();
