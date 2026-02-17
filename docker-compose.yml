@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: faug_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: faug_user
+      POSTGRES_PASSWORD: faug_password
+      POSTGRES_DB: faug_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postres/postgres_data
+
+
+  redis:
+    image: redis:alpine
+    container_name: faug-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  volumes: 
+    postgres_data:
