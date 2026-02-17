@@ -1,6 +1,8 @@
 using FauG.Gateway.Core.Data;
+using FauG.Gateway.Core.Services;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
@@ -15,6 +17,12 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
 });
+// Add redis connection for atomic operations
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!)
+);
+// register wrapper service
+builder.Services.AddSingleton<RedisService>();
 
 // YARP(Reverse Proxy)
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));

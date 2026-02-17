@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="Core/Data/" />
     <Folder Include="Core/Data/Migrations/" />
+    <Folder Include="Core/Services/" />
   </ItemGroup>
 
 </Project>
