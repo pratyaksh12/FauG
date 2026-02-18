@@ -9,7 +9,7 @@ public class RedisService(IDistributedCache cache, IConnectionMultiplexer redisM
     private readonly IDatabase _db = redisMux.GetDatabase();
 
     // Caching Objects with Auth Policies
-    public async Task<T?> GetTAsync<T>(string key)
+    public async Task<T?> GetAsync<T>(string key)
     {
         var data = await cache.GetStringAsync(key);
         return data == null ? default : System.Text.Json.JsonSerializer.Deserialize<T>(data);

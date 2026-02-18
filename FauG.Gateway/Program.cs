@@ -1,4 +1,5 @@
 using FauG.Gateway.Core.Data;
+using FauG.Gateway.Core.Middleware;
 using FauG.Gateway.Core.Services;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,9 @@ builder.Services.AddSingleton<RedisService>();
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 var app = builder.Build();
 
+// reegister middleware
+app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<BudgetMiddleware>();
 // Configure the HTTP request pipeline.
 app.MapReverseProxy();
 
