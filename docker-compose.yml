@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: faug_user
-      POSTGRES_PASSWORD: faug_password
+      POSTGRES_PASSWORD: faug_password_secure
       POSTGRES_DB: faug_db
     ports:
       - "5432:5432"

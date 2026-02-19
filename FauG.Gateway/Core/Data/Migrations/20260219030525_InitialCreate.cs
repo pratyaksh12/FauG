@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace FauG.Gateway.Core.Data.Migrations
 {
     /// <inheritdoc />
@@ -11,6 +13,22 @@ namespace FauG.Gateway.Core.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ModelCost",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModelName = table.Column<string>(type: "text", nullable: false),
+                    Provider = table.Column<string>(type: "text", nullable: false),
+                    InputCostPer1k = table.Column<decimal>(type: "numeric", nullable: false),
+                    OutputCostPer1k = table.Column<decimal>(type: "numeric", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModelCost", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Orgatisations",
                 columns: table => new
@@ -145,6 +163,16 @@ namespace FauG.Gateway.Core.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "ModelCost",
+                columns: new[] { "Id", "CreatedAt", "InputCostPer1k", "ModelName", "OutputCostPer1k", "Provider" },
+                values: new object[,]
+                {
+                    { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0.002m, "gpt-4o", 0.00125m, "OpenAI" },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0.0005m, "gpt-3.5-turbo", 0.0015m, "OpenAI" },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0.00059m, "llama3-70b-8192", 0.00079m, "Groq" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Policies_VirtualKeyId",
                 table: "Policies",
@@ -180,6 +208,9 @@ namespace FauG.Gateway.Core.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ModelCost");
+
             migrationBuilder.DropTable(
                 name: "Policies");
 

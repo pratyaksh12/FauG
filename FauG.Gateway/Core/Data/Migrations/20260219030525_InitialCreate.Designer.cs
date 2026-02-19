@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FauG.Gateway.Core.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260217153507_InitialCreate")]
+    [Migration("20260219030525_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,63 @@ namespace FauG.Gateway.Core.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("FauG.Gateway.Core.Entities.ModelCost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("InputCostPer1k")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ModelName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("OutputCostPer1k")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModelCost");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            InputCostPer1k = 0.002m,
+                            ModelName = "gpt-4o",
+                            OutputCostPer1k = 0.00125m,
+                            Provider = "OpenAI"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            InputCostPer1k = 0.0005m,
+                            ModelName = "gpt-3.5-turbo",
+                            OutputCostPer1k = 0.0015m,
+                            Provider = "OpenAI"
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            InputCostPer1k = 0.00059m,
+                            ModelName = "llama3-70b-8192",
+                            OutputCostPer1k = 0.00079m,
+                            Provider = "Groq"
+                        });
+                });
 
             modelBuilder.Entity("FauG.Gateway.Core.Entities.Organisation", b =>
                 {
