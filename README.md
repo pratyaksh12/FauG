@@ -1,2 +1,1 @@
-# FauG
-Named after the Hindi word for "Soldier," FauG represents a steadfast protector. In the rapidly evolving landscape of autonomous AI agents, Faugi serves as the front-line defender—ensuring that every prompt is safe, every response is verified, and every cent of the budget is accounted for.
+FauG, which is derived from the Hindi word for "Soldier," stands for a resolute guardian. Faugi is the front-line defender in the quickly changing field of autonomous AI agents, making sure that every prompt is secure, every response is validated, and every dollar of the budget is tracked.
