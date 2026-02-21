@@ -7,7 +7,6 @@ using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
-
 // Add application persistance for default database
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -22,16 +21,21 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!)
 );
+
 // register wrapper service
 builder.Services.AddSingleton<RedisService>();
-
+// register jailbreakscanner - Qualfire's Sentinel-v2
+builder.Services.AddSingleton<JailbreakService>();
 // YARP(Reverse Proxy)
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
 var app = builder.Build();
 
 // reegister middleware
 app.UseMiddleware<AuthMiddleware>();
 app.UseMiddleware<BudgetMiddleware>();
+app.UseMiddleware<SecurityMiddleware>();
+
 // Configure the HTTP request pipeline.
 app.MapReverseProxy();
 
