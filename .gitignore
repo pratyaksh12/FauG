@@ -8,6 +8,7 @@
 *.sln.docstates
 *.DS_Store
 .DS_Store
+.env
 
 # Ignore the heavy AI models and Python venv
 Models/

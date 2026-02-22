@@ -7,7 +7,7 @@ public class RequestLog : BaseModel
     public required string ModelName{get; set;}
     public int PromptTokens{get; set;}
     public int CompletionTokens{get; set;}
-    public int TotalTokens => PromptTokens + CompletionTokens;
+    public int TotalTokens{get; set;}
     public decimal EstimatedCost{get; set;}
     public int StatusCode{get; set;}
     public long DurationMs{get; set;}

@@ -27,6 +27,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddSingleton<RoutingTransformProvider>();
 // register wrapper service
 builder.Services.AddSingleton<RedisService>();
+// register async request logger
+builder.Services.AddSingleton<RequestLogService>();
 // register jailbreakscanner - Qualfire's Sentinel-v2
 builder.Services.AddSingleton<JailbreakService>();
 // YARP(Reverse Proxy)

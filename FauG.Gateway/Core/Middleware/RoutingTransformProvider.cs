@@ -4,6 +4,7 @@ using System.Text.Json;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 using DotNetEnv;
+using FauG.Gateway.Core.Services;
 
 namespace FauG.Gateway.Core.Middleware;
 
@@ -48,6 +49,42 @@ public class RoutingTransformProvider : ITransformProvider
                                 transformContext.ProxyRequest.Headers.Remove("Authorization");
                                 transformContext.ProxyRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", openAiKey);
                             }
+                        }
+                    }
+                }
+            });
+
+            context.AddResponseTransform(async responseContext =>
+            {
+                if(responseContext.ProxyResponse != null && responseContext.ProxyResponse.IsSuccessStatusCode)
+                {
+                    if(responseContext.HttpContext.Items.TryGetValue("Auth", out var authObject) && authObject is AuthContext authContext)
+                    {
+                        var bytes = await responseContext.ProxyResponse.Content.ReadAsByteArrayAsync();
+                        var responseBody = Encoding.UTF8.GetString(bytes);
+                        
+                        // Replace the forward-only stream with our buffered array so YARP can send it to the client
+                        var newContent = new ByteArrayContent(bytes);
+                        foreach(var header in responseContext.ProxyResponse.Content.Headers)
+                        {
+                            newContent.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                        }
+                        responseContext.ProxyResponse.Content = newContent;
+
+                        try
+                        {
+                            var json = JsonDocument.Parse(responseBody);
+                            if(json.RootElement.TryGetProperty("usage", out var usage) && usage.TryGetProperty("total_tokens", out var tokens) && json.RootElement.TryGetProperty("model", out var model))
+                            {
+                                int totalTokens = tokens.GetInt32();
+                                var logger = responseContext.HttpContext.RequestServices.GetRequiredService<RequestLogService>();
+                                _ = logger.LogUsageAsync(authContext, model.ToString(), totalTokens, StatusCodes.Status200OK);
+                                
+                            }
+                        }
+                        catch
+                        {
+                            // ignoring the error for now.
                         }
                     }
                 }
