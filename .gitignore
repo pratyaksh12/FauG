@@ -11,3 +11,4 @@
 
 # Ignore the heavy AI models and Python venv
 Models/
+Models_Backup/
