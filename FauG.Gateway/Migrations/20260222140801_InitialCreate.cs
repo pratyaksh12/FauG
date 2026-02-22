@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace FauG.Gateway.Core.Data.Migrations
+namespace FauG.Gateway.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -172,6 +172,26 @@ namespace FauG.Gateway.Core.Data.Migrations
                     { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0.0005m, "gpt-3.5-turbo", 0.0015m, "OpenAI" },
                     { new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0.00059m, "llama3-70b-8192", 0.00079m, "Groq" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Orgatisations",
+                columns: new[] { "Id", "CreatedAt", "Name", "TotalCurrentSpend", "TotalMontlyBudget" },
+                values: new object[] { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Test Org", 0m, 1000m });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Access", "AllocatedBudget", "CreatedAt", "CurrentSpend", "OrganisationId" },
+                values: new object[] { new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), false, 1000m, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0m, new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa") });
+
+            migrationBuilder.InsertData(
+                table: "VirtualKeys",
+                columns: new[] { "Id", "CreatedAt", "IsRevoked", "KeyHash", "LastUsedAt", "UserId" },
+                values: new object[] { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), false, "4Eewl8OQ7obBcMby4ZfuZyaYglxZ0VdkDYo6SFs/6g8=", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb") });
+
+            migrationBuilder.InsertData(
+                table: "Policies",
+                columns: new[] { "Id", "AllowedModels", "CreatedAt", "MaxTokenSpend", "RequestsPerMinute", "VirtualKeyId" },
+                values: new object[] { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), new[] { "gpt-4o", "llama3-70b-8192" }, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1000m, 60, new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Policies_VirtualKeyId",

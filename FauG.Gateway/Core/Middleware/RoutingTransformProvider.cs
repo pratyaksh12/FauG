@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
+using DotNetEnv;
 
 namespace FauG.Gateway.Core.Middleware;
 
@@ -10,7 +11,7 @@ public class RoutingTransformProvider : ITransformProvider
 {
     public void Apply(TransformBuilderContext context)
     {
-        if(context.Route.RouteId == "ai-route")
+        if(context.Route.RouteId == "ai-routes")
         {
             context.AddRequestTransform(async transformContext =>
             {
@@ -22,6 +23,7 @@ public class RoutingTransformProvider : ITransformProvider
                     httpContext.Request.Body.Position = 0;
                     using var reader = new StreamReader(httpContext.Request.Body, Encoding.UTF8, leaveOpen:true);
                     var body = await reader.ReadToEndAsync();
+                    httpContext.Request.Body.Position = 0;
 
                     if (!string.IsNullOrEmpty(body))
                     {
@@ -41,8 +43,10 @@ public class RoutingTransformProvider : ITransformProvider
                             }
                             if(modelName.Contains("gpt", StringComparison.InvariantCultureIgnoreCase))
                             {
+                                var openAiKey = Environment.GetEnvironmentVariable("OPEN_AI_KEY");
                                 transformContext.ProxyRequest.RequestUri = new Uri("https://api.openai.com/v1/chat/completions");
-                                transformContext.ProxyRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer:", "AGAIN_WILL_)LOAD_THE_VALUE_FROM_CACHE_OR_DATABASE");
+                                transformContext.ProxyRequest.Headers.Remove("Authorization");
+                                transformContext.ProxyRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", openAiKey);
                             }
                         }
                     }

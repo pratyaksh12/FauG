@@ -75,6 +75,6 @@ public class JailbreakService : IDisposable
     
     public void Dispose()
     {
-        _session!.Dispose();
+        _session?.Dispose();
     }
 }

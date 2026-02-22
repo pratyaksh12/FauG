@@ -4,6 +4,8 @@ using FauG.Gateway.Core.Services;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using DotNetEnv;
+Env.TraversePath().Load();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
@@ -21,14 +23,14 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!)
 );
-
+// Registering routing logic
+builder.Services.AddSingleton<RoutingTransformProvider>();
 // register wrapper service
 builder.Services.AddSingleton<RedisService>();
 // register jailbreakscanner - Qualfire's Sentinel-v2
 builder.Services.AddSingleton<JailbreakService>();
 // YARP(Reverse Proxy)
-builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
+builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy")).AddTransforms<RoutingTransformProvider>();
 var app = builder.Build();
 
 // reegister middleware

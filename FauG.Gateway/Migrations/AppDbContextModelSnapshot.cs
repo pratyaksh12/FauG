@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FauG.Gateway.Core.Data.Migrations
+namespace FauG.Gateway.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -101,6 +101,16 @@ namespace FauG.Gateway.Core.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orgatisations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Test Org",
+                            TotalCurrentSpend = 0m,
+                            TotalMontlyBudget = 1000m
+                        });
                 });
 
             modelBuilder.Entity("FauG.Gateway.Core.Entities.ProviderAccount", b =>
@@ -199,6 +209,17 @@ namespace FauG.Gateway.Core.Data.Migrations
                     b.HasIndex("OrganisationId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            Access = false,
+                            AllocatedBudget = 1000m,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CurrentSpend = 0m,
+                            OrganisationId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
+                        });
                 });
 
             modelBuilder.Entity("FauG.Gateway.Core.Entities.VirtualKey", b =>
@@ -228,6 +249,17 @@ namespace FauG.Gateway.Core.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("VirtualKeys");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsRevoked = false,
+                            KeyHash = "4Eewl8OQ7obBcMby4ZfuZyaYglxZ0VdkDYo6SFs/6g8=",
+                            LastUsedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
+                        });
                 });
 
             modelBuilder.Entity("FauG.Gateway.Core.Policy", b =>
@@ -258,6 +290,17 @@ namespace FauG.Gateway.Core.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Policies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            AllowedModels = new[] { "gpt-4o", "llama3-70b-8192" },
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            MaxTokenSpend = 1000m,
+                            RequestsPerMinute = 60,
+                            VirtualKeyId = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc")
+                        });
                 });
 
             modelBuilder.Entity("FauG.Gateway.Core.Entities.ProviderAccount", b =>

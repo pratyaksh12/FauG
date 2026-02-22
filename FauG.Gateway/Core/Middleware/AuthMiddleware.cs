@@ -17,7 +17,12 @@ public class AuthMiddleware(RequestDelegate next, IServiceScopeFactory scopeFact
             return;
         }
 
-        var keyHash = tokenValue.ToString().Replace("Bearer", "");
+        var token = tokenValue.ToString().Replace("Bearer", "").Trim();
+
+        // 2. Hash the token securely to match the database
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(token));
+        var keyHash = Convert.ToBase64String(hashBytes);
 
         // hot path check
         var cacheAuth = await redis.GetAsync<AuthContext>($"Auth:{keyHash}");
@@ -35,8 +40,8 @@ public class AuthMiddleware(RequestDelegate next, IServiceScopeFactory scopeFact
                 await context.Response.WriteAsync("Invalid key.");
                 return;
             }
-            var cachedAuth = new AuthContext(key.UserId, key.User.OrganisationId, key.Id, key.User.AllocatedBudget);
-            await redis.SetAsync($"Auth{keyHash}", cachedAuth, TimeSpan.FromMinutes(5));
+            cacheAuth = new AuthContext(key.UserId, key.User.OrganisationId, key.Id, key.User.AllocatedBudget);
+            await redis.SetAsync($"Auth:{keyHash}", cacheAuth, TimeSpan.FromMinutes(5));
         }
 
         context.Items["Auth"] = cacheAuth;
