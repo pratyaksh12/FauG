@@ -15,6 +15,6 @@ public class RequestLog : BaseModel
     // relationship
     public Guid VirtualKeyId{get; set;}
     public VirtualKey VirtualKey{get; set;} = null!;
-    public Guid ProviderAccountId{get; set;}
-    public ProviderAccount ProviderAccount{get; set;} = null!;
+    public Guid? ProviderAccountId{get; set;}
+    public ProviderAccount? ProviderAccount{get; set;} = null!;
 }

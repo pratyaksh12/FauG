@@ -63,7 +63,7 @@ public class RoutingTransformProvider : ITransformProvider
                         var bytes = await responseContext.ProxyResponse.Content.ReadAsByteArrayAsync();
                         var responseBody = Encoding.UTF8.GetString(bytes);
                         
-                        // Replace the forward-only stream with our buffered array so YARP can send it to the client
+                        
                         var newContent = new ByteArrayContent(bytes);
                         foreach(var header in responseContext.ProxyResponse.Content.Headers)
                         {

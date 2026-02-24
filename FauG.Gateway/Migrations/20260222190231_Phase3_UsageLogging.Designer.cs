@@ -3,6 +3,7 @@ using System;
 using FauG.Gateway.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FauG.Gateway.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260222190231_Phase3_UsageLogging")]
+    partial class Phase3_UsageLogging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,7 +168,7 @@ namespace FauG.Gateway.Migrations
                     b.Property<int>("PromptTokens")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ProviderAccountId")
+                    b.Property<Guid>("ProviderAccountId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("StatusCode")
@@ -321,7 +324,9 @@ namespace FauG.Gateway.Migrations
                 {
                     b.HasOne("FauG.Gateway.Core.Entities.ProviderAccount", "ProviderAccount")
                         .WithMany()
-                        .HasForeignKey("ProviderAccountId");
+                        .HasForeignKey("ProviderAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FauG.Gateway.Core.Entities.VirtualKey", "VirtualKey")
                         .WithMany("RequestLogs")
