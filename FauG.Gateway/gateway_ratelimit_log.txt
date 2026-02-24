@@ -1,0 +1,21 @@
+Using launch settings from /Users/pratyashbasel/Desktop/FauG/FauG.Gateway/Properties/launchSettings.json...
+Building...
+/Users/pratyashbasel/Desktop/FauG/FauG.Gateway/Core/Middleware/RoutingTransformProvider.cs(22,70): warning CS8602: Dereference of a possibly null reference. [/Users/pratyashbasel/Desktop/FauG/FauG.Gateway/FauG.Gateway.csproj]
+info: Yarp.ReverseProxy.Configuration.ConfigProvider.ConfigurationConfigProvider[1]
+      Loading proxy data from config.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5209
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/pratyashbasel/Desktop/FauG/FauG.Gateway
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (28ms) [Parameters=[@__keyHash_0='?'], CommandType='Text', CommandTimeout='30']
+      SELECT v."Id", v."CreatedAt", v."IsRevoked", v."KeyHash", v."LastUsedAt", v."UserId", u."Id", u."Access", u."AllocatedBudget", u."CreatedAt", u."CurrentSpend", u."OrganisationId", o."Id", o."CreatedAt", o."Name", o."TotalCurrentSpend", o."TotalMontlyBudget"
+      FROM "VirtualKeys" AS v
+      INNER JOIN "Users" AS u ON v."UserId" = u."Id"
+      INNER JOIN "Orgatisations" AS o ON u."OrganisationId" = o."Id"
+      WHERE v."KeyHash" = @__keyHash_0 AND NOT (v."IsRevoked")
+      LIMIT 1

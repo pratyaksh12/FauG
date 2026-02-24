@@ -24,6 +24,17 @@ public class RedisService(IDistributedCache cache, IConnectionMultiplexer redisM
         });
     }
 
+    public async Task<int> IncrementAsync(string key)
+    {
+        var count = await _db.StringIncrementAsync(key);
+        return (int)count;
+    }
+
+    public async Task SetExpiryAsync(string key, TimeSpan tte)
+    {
+        await _db.KeyExpireAsync(key, tte);
+    }
+
     // Atomic Counter for Budget and Rate Limiting
     public async Task<long> DecrementAsync(string key, long amount = 1)
     {

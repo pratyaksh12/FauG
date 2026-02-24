@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using DotNetEnv;
+using System.Globalization;
 Env.TraversePath().Load();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,12 +38,11 @@ var app = builder.Build();
 
 // reegister middleware
 app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<RateLimitingMiddleware>();
 app.UseMiddleware<BudgetMiddleware>();
 app.UseMiddleware<SecurityMiddleware>();
-
 // Configure the HTTP request pipeline.
-app.MapReverseProxy();
-
+app.MapReverseProxy();                                                  
 app.MapGet("/", () =>{
    return "FauG Active Hiii!!";
 });
