@@ -1,0 +1,16 @@
+=== Test 1: Invalid Authentication (Missing/Fake Virtual Key) ===
+
+Request:
+POST /v1/chat/completions HTTP/1.1
+Authorization: Bearer invalid_key
+Content-Type: application/json
+
+{"model": "gpt-4o", "messages": [{"role": "user", "content": "hello"}]}
+
+
+Response (Rejected by Middleware):
+HTTP/1.1 400 Bad Request
+Date: Tue, 24 Feb 2026 11:43:50 GMT
+Server: Kestrel
+
+Invalid key.

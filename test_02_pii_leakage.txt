@@ -1,0 +1,19 @@
+=== Test 2: PII Data Leakage (Regex Check) ===
+
+Request:
+POST /v1/chat/completions HTTP/1.1
+Authorization: Bearer faug_test_00000000000000000000000000000000
+Content-Type: application/json
+
+{"model": "gpt-4o", "messages": [{"role": "user", "content": "My email is test@hacker.com, please contact me."}]}
+
+
+Response (Rejected by Security Middleware):
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+Date: Tue, 24 Feb 2026 11:44:07 GMT
+Server: Kestrel
+X-Rate-Limit: 10
+X-RateLimit-Remaining: 9
+
+"emails are not suppose to be present in the prompts"
